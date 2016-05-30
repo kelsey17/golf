@@ -51,10 +51,14 @@ data <- basic %>%
   left_join(d20, by = "PLAYER") %>% 
   left_join(results, by = "PLAYER")
 
-data <- data[!is.na(data$POS),] # change unranked players to have 0 rank
+data <- data[!is.na(data$POS),] # only take players who participated in Masters
 y <- as.vector(data$POS)
 row.names(data) <- data$PLAYER
-X <- select(data, -PLAYER, -POS)
+data <- select(data, -PLAYER) # set player names as row names, remove from data frame
+for(i in 1:ncol(data)){
+  data[is.na(data[,i]), i] <- mean(data[,i], na.rm = TRUE)
+}
+X <- select(data, -POS) # matrix without response variable
 
 corrgram(X)
 
@@ -65,6 +69,8 @@ lambda = exp(seq(-10,0,length = 100))
 fit <- cv.glmnet(as.matrix(nona), y, alpha = 0, standardize = F, lambda= lambda)
 pred <- predict(fit, as.matrix(nona))
 plot(pred,y)
+pred
+coef(pred)
 
 nneg <- nona
 nneg[nneg<0] <- 0
