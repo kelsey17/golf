@@ -1,7 +1,70 @@
-source('final script.R')
+library(dplyr)
+library(ggplot2)
+library(corrgram)
+library(glmnet)
+library(NMF)
+
+# read in 2014 data 
+
+basic <- read.csv('Masters Data 2014 - Basic data (1).csv')
+d1 <- read.csv('Masters Data 2014 - Birdie Conversions 2014.csv')
+d2 <- read.csv('Masters Data 2014 - Bounce Back 2014.csv')
+d3 <- read.csv('Masters Data 2014 - Club Head Speed 2014.csv')
+d4 <- read.csv('Masters Data 2014 - Going for the Green 2014 (1).csv')
+d5 <- read.csv('Masters Data 2014 - Greens Hit in Regulation 2014.csv')
+d6 <- read.csv('Masters Data 2014 - Hit Fairway Percentage 2014.csv')
+d7 <- read.csv('Masters Data 2014 - One Putt Percentage.csv')
+d8 <- read.csv('Masters Data 2014 - Par 3 Scoring Average (1).csv')
+d9 <- read.csv('Masters Data 2014 - Par 4 Scoring Average.csv')
+d10 <- read.csv('Masters Data 2014 - Par 5 Scoring Average.csv')
+d11 <- read.csv('Masters Data 2014 - Proximity to the Hole 2014.csv')
+d12 <- read.csv('Masters Data 2014 - Putts Per Round 2014.csv')
+d13 <- read.csv('Masters Data 2014 - Rough Tendency 2014.csv')
+d14 <- read.csv('Masters Data 2014 - Sand Save Percentage 2014.csv')
+d15 <- read.csv('Masters Data 2014 - Scoring Average.csv')
+d16 <- read.csv('Masters Data 2014 - Scrambling 2014.csv')
+d17 <- read.csv('Masters Data 2014 - Strokes Gained Putting.csv')
+d18 <- read.csv('Masters Data 2014 - Strokes Gained Tee to Green 2014.csv')
+d19 <- read.csv('Masters Data 2014 - Total Putting.csv')
+d20 <- read.csv('Masters Data 2014 - Total Putts Gained.csv')
+results <- read.csv('Masters Data 2014 - RESULTS.csv')
+
+data <- basic %>% 
+  left_join(d1, by = "PLAYER") %>% 
+  left_join(d2, by = "PLAYER") %>% 
+  left_join(d3, by = "PLAYER") %>% 
+  left_join(d4, by = "PLAYER") %>% 
+  left_join(d5, by = "PLAYER") %>% 
+  left_join(d6, by = "PLAYER") %>% 
+  left_join(d7, by = "PLAYER") %>% 
+  left_join(d8, by = "PLAYER") %>% 
+  left_join(d9, by = "PLAYER") %>% 
+  left_join(d10, by = "PLAYER") %>% 
+  left_join(d11, by = "PLAYER") %>%
+  left_join(d12, by = "PLAYER") %>% 
+  left_join(d13, by = "PLAYER") %>% 
+  left_join(d14, by = "PLAYER") %>% 
+  left_join(d15, by = "PLAYER") %>% 
+  left_join(d16, by = "PLAYER") %>% 
+  left_join(d17, by = "PLAYER") %>% 
+  left_join(d18, by = "PLAYER") %>% 
+  left_join(d19, by = "PLAYER") %>% 
+  left_join(d20, by = "PLAYER") %>% 
+  left_join(results, by = "PLAYER")
+
+data <- data[!is.na(data$POS),] # only take players who participated in Masters
+y_2014 <- as.vector(data$POS)
+row.names(data) <- paste(data$PLAYER, "2014", sep = " ")
+data <- select(data, -PLAYER) # set player names as row names, remove from data frame
+for(i in 1:ncol(data)){ # set missing values to mean of that column
+  data[is.na(data[,i]), i] <- mean(data[,i], na.rm = TRUE)
+}
 data_2014 <- select(data, -PAR.3, -PAR.4, -greens.hit, -GIR.RANK, -TOTAL, -AVERAGE,
                     -TOTAL.PUTTS.GAINED, -AGE)
 X_2014 <- select(data_2014, -POS)
+dput(X_2014, "X_2014")
+dput(y_2014, "y_2014")
+
 
 # uploading data from 2013
 
@@ -43,12 +106,15 @@ data_2013 <- basic %>%
 
 data_2013 <- data_2013[!is.na(data_2013$POS),] # only take players who participated in Masters
 y_2013 <- as.vector(data_2013$POS)
-row.names(data_2013) <- paste(data_2013$PLAYER, '2013', sep = "")
+row.names(data_2013) <- paste(data_2013$PLAYER, '2013', sep = " ")
 data_2013 <- select(data_2013, -PLAYER, -AGE) # set player names as row names, remove from data frame
 for(i in 1:ncol(data_2013)){ # set missing values to mean of that column
   data_2013[is.na(data_2013[,i]), i] <- mean(data_2013[,i], na.rm = TRUE)
 }
 X_2013 <- select(data_2013, -POS) # matrix without response variable
+dput(X_2013, "X_2013")
+dput(y_2013, "y_2013")
+
 
 # add data from 2012
 
@@ -90,12 +156,15 @@ data_2012 <- basic %>%
 
 data_2012 <- data_2012[!is.na(data_2012$POS),] # only take players who participated in Masters
 y_2012 <- as.vector(data_2012$POS)
-row.names(data_2012) <- paste(data_2012$PLAYER, '2012', sep = "")
+row.names(data_2012) <- paste(data_2012$PLAYER, '2012', sep = " ")
 data_2012 <- select(data_2012, -PLAYER, -AGE) # set player names as row names, remove from data frame
 for(i in 1:ncol(data_2012)){ # set missing values to mean of that column
   data_2012[is.na(data_2012[,i]), i] <- mean(data_2012[,i], na.rm = TRUE)
 }
 X_2012 <- select(data_2012, -POS) # matrix without response variable
+dput(X_2012, "X_2012")
+dput(y_2012, "y_2012")
+
 
 # adding 2011
 
@@ -137,12 +206,14 @@ data_2011 <- basic %>%
 
 data_2011 <- data_2011[!is.na(data_2011$POS),] # only take players who participated in Masters
 y_2011 <- as.vector(data_2011$POS)
-row.names(data_2011) <- paste(data_2011$PLAYER, '2011', sep = "")
+row.names(data_2011) <- paste(data_2011$PLAYER, '2011', sep = " ")
 data_2011 <- select(data_2011, -PLAYER, -AGE) # set player names as row names, remove from data frame
 for(i in 1:ncol(data_2011)){ # set missing values to mean of that column
   data_2011[is.na(data_2011[,i]), i] <- mean(data_2011[,i], na.rm = TRUE)
 }
 X_2011 <- select(data_2011, -POS) # matrix without response variable
+dput(X_2011, "X_2011")
+dput(y_2011, "y_2011")
 
 # add data from 2010
 
@@ -184,12 +255,15 @@ data_2010 <- basic %>%
 
 data_2010 <- data_2010[!is.na(data_2010$POS),] # only take players who participated in Masters
 y_2010 <- as.vector(data_2010$POS)
-row.names(data_2010) <- paste(data_2010$PLAYER, "2016", sep = "")
+row.names(data_2010) <- paste(data_2010$PLAYER, "2016", sep = " ")
 data_2010 <- select(data_2010, -PLAYER) # set player names as row names, remove from data frame
 for(i in 1:ncol(data_2010)){ # set missing values to mean of that column
   data_2010[is.na(data_2010[,i]), i] <- mean(data_2010[,i], na.rm = TRUE)
 }
 X_2010 <- select(data_2010, -POS) # matrix without response variable
+dput(X_2010, "X_2010")
+dput(y_2010, "y_2010")
+
 
 # uploading data from 2016 (test set)
 
@@ -231,12 +305,14 @@ data_2015 <- basic %>%
 
 data_2015 <- data_2015[!is.na(data_2015$POS),] # only take players who participated in Masters
 y_2015 <- as.vector(data_2015$POS)
-row.names(data_2015) <- paste(data_2015$PLAYER, "2015", sep = "")
+row.names(data_2015) <- paste(data_2015$PLAYER, "2015", sep = " ")
 data_2015 <- select(data_2015, -PLAYER) # set player names as row names, remove from data frame
 for(i in 1:ncol(data_2015)){ # set missing values to mean of that column
   data_2015[is.na(data_2015[,i]), i] <- mean(data_2015[,i], na.rm = TRUE)
 }
 X_2015 <- select(data_2015, -POS) # matrix without response variable
+dput(X_2015, "X_2015")
+dput(y_2015, "y_2015")
 
 # uploading data from 2016 (future test)
 
@@ -274,12 +350,13 @@ data_2016 <- basic %>%
   left_join(d14, by = "PLAYER") %>% 
   left_join(d15, by = "PLAYER") 
 
-row.names(data_2016) <- paste(data_2016$PLAYER, "2016", sep = "")
+row.names(data_2016) <- paste(data_2016$PLAYER, "2016", sep = " ")
 data_2016 <- select(data_2016, -PLAYER) # set player names as row names, remove from data frame
 for(i in 1:ncol(data_2016)){ # set missing values to mean of that column
   data_2016[is.na(data_2016[,i]), i] <- mean(data_2016[,i], na.rm = TRUE)
 }
 X_2016 <- data_2016
+dput(X_2016, "X_2016")
 
 # join all sets
 
