@@ -65,7 +65,6 @@ X_2014 <- select(data_2014, -POS)
 dput(X_2014, "X_2014")
 dput(y_2014, "y_2014")
 
-
 # uploading data from 2013
 
 basic <- read.csv('Masters Data 2013 - Basic Data 2013 (1).csv')
@@ -357,8 +356,3 @@ for(i in 1:ncol(data_2016)){ # set missing values to mean of that column
 }
 X_2016 <- data_2016
 dput(X_2016, "X_2016")
-
-# join all sets
-
-full <- rbind(X_2014, X_2013, X_2012, X_2011, X_2010)
-full_y <- c(y, y_2013, y_2012, y_2011, y_2010)
