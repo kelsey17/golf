@@ -53,7 +53,7 @@ data <- basic %>%
 
 data <- data[!is.na(data$POS),] # only take players who participated in Masters
 y <- as.vector(data$POS)
-row.names(data) <- data$PLAYER
+row.names(data) <- paste(data$PLAYER, "2014", sep = "")
 data <- select(data, -PLAYER) # set player names as row names, remove from data frame
 for(i in 1:ncol(data)){ # set missing values to mean of that column
   data[is.na(data[,i]), i] <- mean(data[,i], na.rm = TRUE)
