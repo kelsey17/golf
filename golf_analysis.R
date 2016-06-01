@@ -19,6 +19,7 @@ y_2010 <- dget("y_2010")
 full <- rbind(X_2015, X_2014, X_2013, X_2012, X_2011, X_2010)
 full_y <- c(y_2015, y_2014, y_2013, y_2012, y_2011, y_2010)
 
+lambda = exp(seq(-10,0,length = 100))
 fit <- cv.glmnet(as.matrix(full), full_y, alpha = 0, standardize= F,lambda= lambda)
 pred <- predict(fit, as.matrix(X_2016))
 View(pred)
@@ -30,7 +31,6 @@ coefficients
 full <- rbind(X_2014, X_2013, X_2012, X_2011, X_2010)
 full_y <- c(y_2014, y_2013, y_2012, y_2011, y_2010)
 
-lambda = exp(seq(-10,0,length = 100))
 fit <- cv.glmnet(as.matrix(full), full_y, alpha = 0, standardize = F, lambda= lambda)
 pred <- predict(fit, as.matrix(X_2015))
 View(pred)
@@ -96,3 +96,14 @@ pred <- predict(fit, as.matrix(X_2010))
 View(pred)
 coefficients <- coef(fit)
 coefficients
+
+# variable analysis
+
+full <- rbind(X_2016, X_2015, X_2014, X_2013, X_2012, X_2011, X_2010)
+corrgram(full)
+
+nneg <- full
+nneg[nneg<0] <- 0
+fact <- nmf(nneg, rank = 4)
+coefmap(fact)
+basismap(fact)
