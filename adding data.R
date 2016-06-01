@@ -27,7 +27,7 @@ d17 <- read.csv('Masters Data 2014 - Strokes Gained Putting.csv')
 d18 <- read.csv('Masters Data 2014 - Strokes Gained Tee to Green 2014.csv')
 d19 <- read.csv('Masters Data 2014 - Total Putting.csv')
 d20 <- read.csv('Masters Data 2014 - Total Putts Gained.csv')
-results <- read.csv('Masters Data 2014 - RESULTS.csv')
+results <- read.csv('Masters Data 2015 - RESULTS.csv')
 
 data <- basic %>% 
   left_join(d1, by = "PLAYER") %>% 
@@ -83,7 +83,7 @@ d12 <- read.csv('Masters Data 2013 - Scoring Average 2013.csv')
 d13 <- read.csv('Masters Data 2013 - Scrambling 2013.csv')
 d14 <- read.csv('Masters Data 2013 - Strokes Gained Putting 2013.csv')
 d15 <- read.csv('Masters Data 2013 - Strokes Gained Tee to Green 2013.csv')
-results <- read.csv('Masters Data 2013 - RESULTS 2013.csv')
+results <- read.csv('Masters Data 2014 - RESULTS.csv')
 
 data_2013 <- basic %>% 
   left_join(d1, by = "PLAYER") %>% 
@@ -133,7 +133,7 @@ d12 <- read.csv('Masters Data 2012 - Scoring Average 2012.csv')
 d13 <- read.csv('Masters Data 2012 - Scrambling 2012.csv')
 d14 <- read.csv('Masters Data 2012 - Strokes Gained Putting.csv')
 d15 <- read.csv('Masters Data 2012 - Strokes Gained Tee to Green 2012.csv')
-results <- read.csv('Masters Data 2012 - RESULTS.csv')
+results <- read.csv('Masters Data 2013 - RESULTS 2013.csv')
 
 data_2012 <- basic %>% 
   left_join(d1, by = "PLAYER") %>% 
@@ -183,7 +183,7 @@ d12 <- read.csv('Masters Data 2011 - Scoring Average 2011.csv')
 d13 <- read.csv('Masters Data 2011 - Scrambling 2011.csv')
 d14 <- read.csv('Masters Data 2011 - Strokes Gained Putting 2011.csv')
 d15 <- read.csv('Masters Data 2011 - Strokes Gained Tee to Green 2011.csv')
-results <- read.csv('Masters Data 2011 - RESULTS.csv')
+results <- read.csv('Masters Data 2012 - RESULTS.csv')
 
 data_2011 <- basic %>% 
   left_join(d1, by = "PLAYER") %>% 
@@ -232,7 +232,7 @@ d12 <- read.csv('Masters Data 2010 - Scoring Average 2010.csv')
 d13 <- read.csv('Masters Data 2010 - Scrambling 2010.csv')
 d14 <- read.csv('Masters Data 2010 - Strokes Gained Putting 2010.csv')
 d15 <- read.csv('Masters Data 2010 - Strokes Gained Tee to Green 2010.csv')
-results <- read.csv('Masters Data 2010 - RESULTS (1).csv')
+results <- read.csv('Masters Data 2011 - RESULTS.csv')
 
 data_2010 <- basic %>% 
   left_join(d1, by = "PLAYER") %>% 
@@ -254,7 +254,7 @@ data_2010 <- basic %>%
 
 data_2010 <- data_2010[!is.na(data_2010$POS),] # only take players who participated in Masters
 y_2010 <- as.vector(data_2010$POS)
-row.names(data_2010) <- paste(data_2010$PLAYER, "2016", sep = " ")
+row.names(data_2010) <- paste(data_2010$PLAYER, "2010", sep = " ")
 data_2010 <- select(data_2010, -PLAYER) # set player names as row names, remove from data frame
 for(i in 1:ncol(data_2010)){ # set missing values to mean of that column
   data_2010[is.na(data_2010[,i]), i] <- mean(data_2010[,i], na.rm = TRUE)
@@ -264,9 +264,9 @@ dput(X_2010, "X_2010")
 dput(y_2010, "y_2010")
 
 
-# uploading data from 2016 (test set)
+# uploading data from 2015 (test set)
 
-basic <- read.csv('Masters Data 2016 - Basic Data 2015.csv')
+basic <- read.csv('Masters Data 2015 - Basic Data 2015.csv')
 d1 <- read.csv('Masters Data 2015 - Birdie Conversions 2015.csv')
 d2 <- read.csv('Masters Data 2015 - Bounce Back 2015.csv')
 d3 <- read.csv('Masters Data 2015 - Club Head Speed 2015.csv')
@@ -282,7 +282,7 @@ d12 <- read.csv('Masters Data 2015 - Scoring Average 2015.csv')
 d13 <- read.csv('Masters Data 2015 - Scrambling 2015.csv')
 d14 <- read.csv('Masters Data 2015 - Strokes Gained Putting 2015.csv')
 d15 <- read.csv('Masters Data 2015 - Strokes Gained Tee to Green 2015.csv')
-results <- read.csv('Masters Data 2015 - RESULTS.csv')
+results <- read.csv('Masters Results 2016 - Sheet1.csv')
 
 data_2015 <- basic %>% 
   left_join(d1, by = "PLAYER") %>% 
