@@ -64,8 +64,8 @@ X <- select(data, -POS) # matrix without response variable
 corrgram(X)
 
 lambda = exp(seq(-10,0,length = 100))
-fit <- cv.glmnet(as.matrix(nona), y, alpha = 0, standardize = F, lambda= lambda)
-pred <- predict(fit, as.matrix(nona))
+fit <- cv.glmnet(as.matrix(X), y, alpha = 0, standardize = F, lambda= lambda)
+pred <- predict(fit, as.matrix(X))
 plot(pred,y)
 pred
 coefficients <- coef(fit)
