@@ -146,11 +146,55 @@ X_2011 <- select(data_2011, -POS) # matrix without response variable
 
 # add data from 2010
 
+basic <- read.csv('Masters Data 2010 - Basic Data 2010.csv')
+d1 <- read.csv('Masters Data 2010 - Birdie Conversions 2010.csv')
+d2 <- read.csv('Masters Data 2010 - Bounce Back 2010.csv')
+d3 <- read.csv('Masters Data 2010 - Club Head Speed 2010.csv')
+d4 <- read.csv('Masters Data 2010 - Going for the Green 2010.csv')
+d5 <- read.csv('Masters Data 2010 - Hit Fairway % 2010.csv')
+d6 <- read.csv('Masters Data 2010 - One Putt % 2010.csv')
+d7 <- read.csv('Masters Data 2010 - Par 5 Scoring Average 2010.csv')
+d8 <- read.csv('Masters Data 2010 - Proximity to the Hole 2010.csv')
+d9 <- read.csv('Masters Data 2010 - Putts Per Round 2010.csv')
+d10 <- read.csv('Masters Data 2010 - Rough Tendency 2010.csv')
+d11 <- read.csv('Masters Data 2010 - Sand Save % 2010.csv')
+d12 <- read.csv('Masters Data 2010 - Scoring Average 2010.csv')
+d13 <- read.csv('Masters Data 2010 - Scrambling 2010.csv')
+d14 <- read.csv('Masters Data 2010 - Strokes Gained Putting 2010.csv')
+d15 <- read.csv('Masters Data 2010 - Strokes Gained Tee to Green 2010.csv')
+results <- read.csv('Masters Data 2010 - RESULTS (1).csv')
+
+data_2010 <- basic %>% 
+  left_join(d1, by = "PLAYER") %>% 
+  left_join(d2, by = "PLAYER") %>% 
+  left_join(d3, by = "PLAYER") %>% 
+  left_join(d4, by = "PLAYER") %>% 
+  left_join(d5, by = "PLAYER") %>% 
+  left_join(d6, by = "PLAYER") %>% 
+  left_join(d7, by = "PLAYER") %>% 
+  left_join(d8, by = "PLAYER") %>% 
+  left_join(d9, by = "PLAYER") %>% 
+  left_join(d10, by = "PLAYER") %>% 
+  left_join(d11, by = "PLAYER") %>%
+  left_join(d12, by = "PLAYER") %>% 
+  left_join(d13, by = "PLAYER") %>% 
+  left_join(d14, by = "PLAYER") %>% 
+  left_join(d15, by = "PLAYER") %>% 
+  left_join(results, by = "PLAYER")
+
+data_2010 <- data_2010[!is.na(data_2010$POS),] # only take players who participated in Masters
+y_2010 <- as.vector(data_2010$POS)
+row.names(data_2010) <- data_2010$PLAYER
+data_2010 <- select(data_2010, -PLAYER) # set player names as row names, remove from data frame
+for(i in 1:ncol(data_2010)){ # set missing values to mean of that column
+  data_2010[is.na(data_2010[,i]), i] <- mean(data_2010[,i], na.rm = TRUE)
+}
+X_2010 <- select(data_2010, -POS) # matrix without response variable
 
 
 
 
 # join all sets
 
-full <- rbind(X_2014, X_2013, X_2012, X_2011)
+full <- rbind(X_2014, X_2013, X_2012, X_2011, X_2010)
 
